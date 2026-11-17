@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest"
 import { taskFixtures } from "../src/data/task-fixtures"
-import { getTasksByStatus } from "../src/domain/task-operations"
-import { sortTasks } from "../src/domain/task-operations"
+import { getTasksByStatus, groupTasksByStatus, sortTasks } from "../src/domain/task-operations"
 
 
 describe('getTasksByStatus', () => { 
@@ -113,3 +112,48 @@ describe('sortTasks', () => {
     })
 
 })
+
+describe('groupTasksByStatus', () =>{
+
+    it('returns all three empty groups for empty input', () =>{
+        
+        expect(groupTasksByStatus([])).toEqual({todo: [], 'in-progress': [], done: []})
+
+    })
+
+    it('groups each task by status while preserving order', () => {
+
+       const grouped =  groupTasksByStatus(taskFixtures)
+
+       const doneTaskId = grouped.done.map(task => task.id)
+       const inProgressTaskId = grouped["in-progress"].map(task => task.id)
+       const todoTaskId = grouped.todo.map(task => task.id)
+
+       expect(doneTaskId).toEqual(['task-103'])
+       expect(inProgressTaskId).toEqual(['task-102', 'task-105'])
+       expect(todoTaskId).toEqual(['task-101', 'task-104'])
+    })
+
+    it('keeps an empty group when no tasks have that status', () => {
+
+        const excludeDone = taskFixtures.filter(task => task.status !== 'done')
+
+        const result = groupTasksByStatus(excludeDone)
+
+        expect(result.done).toEqual([])
+        expect(result["in-progress"]).toHaveLength(2)
+        expect(result.todo).toHaveLength(2)
+    })
+
+    it('does not change the input tasks', () => {
+
+        const clonedArray = structuredClone(taskFixtures)
+
+        const newArray = structuredClone(clonedArray)
+
+        groupTasksByStatus(clonedArray)
+
+        expect(clonedArray).toEqual(newArray)
+    })
+})
+

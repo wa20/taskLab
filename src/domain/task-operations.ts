@@ -37,3 +37,17 @@ export const sortTasks = (tasks: readonly Task[]): Task[] => {
 
     return copy
 }
+
+export type ITasksByStatus = Record<TaskStatus, Task[]>;
+
+export const groupTasksByStatus = (tasks: readonly Task[]): ITasksByStatus => {
+
+    const groups: ITasksByStatus = {todo: [], 'in-progress': [], done: []}
+
+    for(const task of tasks) {
+
+       groups[task.status].push(task)
+    }
+
+    return groups
+}
