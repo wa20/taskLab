@@ -69,3 +69,28 @@ export const countTasksByStatus = (tasks: readonly Task[], status: TaskStatus): 
 
     return taskStatusCount
 }
+
+export const addTask = (tasks: readonly Task[], taskToAdd: Task): Task[] => {
+
+    const hasDuplicated = tasks.some(task => task.id === taskToAdd.id)
+
+    if(hasDuplicated){
+
+        throw new Error('Duplicate task ID')
+    }
+
+    const checkTitle = taskToAdd.title.trim()
+
+    if(checkTitle.length === 0){
+
+        throw new Error('Title must not be blank')
+    }
+
+    if(checkTitle.length > 120){
+        throw new Error('Title must not exceed 120 characters')
+    }
+
+
+      return [...tasks, { ...taskToAdd, title: checkTitle }]
+    
+}

@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest"
 import { taskFixtures } from "../src/data/task-fixtures"
-import { getTasksByStatus, groupTasksByStatus, sortTasks, getUnfinishedTasks } from "../src/domain/task-operations"
+import { getTasksByStatus, groupTasksByStatus, sortTasks, getUnfinishedTasks, addTask } from "../src/domain/task-operations"
+import type { Task } from "../src/domain/task"
+import { urlToHttpOptions } from "node:url"
 
 
 describe('getTasksByStatus', () => { 
@@ -167,5 +169,126 @@ describe('getUnfinishedTasks', () => {
 
         expect(resultId).toEqual(['task-102', 'task-101', 'task-105', 'task-104'])
     })
+})
+
+
+describe('addTask', () => {
+
+    it('appends a new task to the end of the collection', () =>{
+
+        const newTask: Task = {
+            id: "task-106",
+            title: "New Test Task",
+            status: "todo",
+            priority: 2,
+            createdAt: "2026-11-01T09:00:00.000Z"
+        }
+
+        const result = addTask(taskFixtures, newTask)
+
+        expect(result).toEqual([...taskFixtures, newTask])
+
+
+    } )
+
+    it('rejects a task whose ID already exists', () => {
+
+        const newTask: Task = {
+            id: "task-101",
+            title: "New Test Task",
+            status: "todo",
+            priority: 2,
+            createdAt: "2026-11-01T09:00:00.000Z"
+        }
+
+        expect(() => addTask(taskFixtures, newTask)).toThrow('Duplicate task ID');
+
+    })
+
+    it('rejects a title containing only whitespace', () => {
+
+        const newTask: Task = {
+            id: "task-106",
+            title: "   ",
+            status: "todo",
+            priority: 2,
+            createdAt: "2026-11-01T09:00:00.000Z"
+        }
+
+        expect(() => addTask(taskFixtures, newTask)).toThrow('Title must not be blank')
+
+    })
+
+    it('trims the new title without changing the supplied task', () => {
+        
+        const newTask: Task = {
+            id: "task-106",
+            title: " Read a book ",
+            status: "todo",
+            priority: 2,
+            createdAt: "2026-11-01T09:00:00.000Z"
+        }
+
+        const returnedTitles = addTask(taskFixtures, newTask).map(task => task.title)
+
+        expect(returnedTitles[returnedTitles.length - 1]).toBe('Read a book')
+        expect(newTask.title).toBe(' Read a book ')
+
+    })
+
+
+    it('rejects a title longer than 120 characters after trimming', () => {
+    
+        const newTask: Task = {
+            id: "task-106",
+            title: "a".repeat(121),
+            status: "todo",
+            priority: 2,
+            createdAt: "2026-11-01T09:00:00.000Z"
+        }
+
+     expect(() => addTask(taskFixtures, newTask)).toThrow('Title must not exceed 120 characters')
+
+    })
+
+
+    it('accepts a 120-character title after trimming surrounding spaces', () => {
+    
+        const newTask: Task = {
+            id: "task-106",
+            title: ' ' + 'a'.repeat(120) + ' ',
+            status: "todo",
+            priority: 2,
+            createdAt: "2026-11-01T09:00:00.000Z"
+        }
+
+        const returnedTitles = addTask(taskFixtures, newTask).map(task => task.title)
+
+        expect(returnedTitles[returnedTitles.length - 1]).toBe('a'.repeat(120))
+    })
+
+
+    it('returns a new array without changing existing tasks', () => {
+        
+        const input = structuredClone(taskFixtures)
+
+        const beforeSnapshot = structuredClone(input)
+
+        const newTask: Task = {
+            id: "task-106",
+            title: ' ' + 'a'.repeat(120) + ' ',
+            status: "todo",
+            priority: 2,
+            createdAt: "2026-11-01T09:00:00.000Z"
+        }
+
+        const result = addTask(input, newTask)
+
+        expect(input).toEqual(beforeSnapshot)
+        expect(result).not.toBe(input)
+
+    })
+
+
 })
 
