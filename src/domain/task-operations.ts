@@ -51,3 +51,21 @@ export const groupTasksByStatus = (tasks: readonly Task[]): ITasksByStatus => {
 
     return groups
 }
+
+export const getUnfinishedTasks = (tasks: readonly Task[]): Task[] => {
+    
+    const unFinishedTodo = getTasksByStatus(tasks, 'todo') 
+
+    const unFinishedInProgress = getTasksByStatus(tasks, 'in-progress') 
+
+    const unFinishedTasks = [...unFinishedTodo, ...unFinishedInProgress]
+
+    return sortTasks(unFinishedTasks)
+}
+
+export const countTasksByStatus = (tasks: readonly Task[], status: TaskStatus): number => {
+    
+    const taskStatusCount = getTasksByStatus(tasks, status).length
+
+    return taskStatusCount
+}

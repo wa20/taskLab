@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
 import { taskFixtures } from "../src/data/task-fixtures"
-import { getTasksByStatus, groupTasksByStatus, sortTasks } from "../src/domain/task-operations"
+import { getTasksByStatus, groupTasksByStatus, sortTasks, getUnfinishedTasks } from "../src/domain/task-operations"
 
 
 describe('getTasksByStatus', () => { 
@@ -154,6 +154,18 @@ describe('groupTasksByStatus', () =>{
         groupTasksByStatus(clonedArray)
 
         expect(clonedArray).toEqual(newArray)
+    })
+})
+
+describe('getUnfinishedTasks', () => {
+
+    it('returns unfinished tasks in priority and creation-date order', () => {
+        
+        const result = getUnfinishedTasks(taskFixtures)
+
+        const resultId = result.map(task => task.id)
+
+        expect(resultId).toEqual(['task-102', 'task-101', 'task-105', 'task-104'])
     })
 })
 
