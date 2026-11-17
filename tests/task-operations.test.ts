@@ -26,13 +26,13 @@ describe('getTasksByStatus', () => {
 
 
     it('does not change the input tasks', () => {
-        const beforeSnapshot = structuredClone(taskFixtures)
+        const newArray = structuredClone(taskFixtures)
 
-        const input = structuredClone(beforeSnapshot)
+        const arrayTwo = structuredClone(newArray)
 
-        getTasksByStatus(input, 'todo')
+        getTasksByStatus(arrayTwo, 'todo')
 
-        expect(input).toEqual(beforeSnapshot)
+        expect(arrayTwo).toEqual(newArray)
     })
     
 
@@ -55,13 +55,13 @@ describe('sortTasks', () => {
 
     it('does not change the input tasks', () => {
 
-        const beforeSnapshot = structuredClone(taskFixtures)
+        const newArray = structuredClone(taskFixtures)
 
-        const input = structuredClone(beforeSnapshot)
+        const arrayTwo = structuredClone(newArray)
 
-        sortTasks(input)
+        sortTasks(arrayTwo)
 
-        expect(input).toEqual(beforeSnapshot)
+        expect(arrayTwo).toEqual(newArray)
 
     })
 
@@ -147,13 +147,13 @@ describe('groupTasksByStatus', () =>{
 
     it('does not change the input tasks', () => {
 
-        const input = structuredClone(taskFixtures)
+        const clonedArray = structuredClone(taskFixtures)
 
-        const beforeSnapshot = structuredClone(input)
+        const newArray = structuredClone(clonedArray)
 
-        groupTasksByStatus(input)
+        groupTasksByStatus(clonedArray)
 
-        expect(input).toEqual(beforeSnapshot)
+        expect(clonedArray).toEqual(newArray)
     })
 })
 
