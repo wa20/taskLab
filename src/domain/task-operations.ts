@@ -94,3 +94,42 @@ export const addTask = (tasks: readonly Task[], taskToAdd: Task): Task[] => {
       return [...tasks, { ...taskToAdd, title: checkTitle }]
     
 }
+
+export type ITaskChanges = Partial<Pick<Task, 'title' | 'status' | 'priority'>>
+
+export const updateTask = (tasks: readonly Task[], id: string, changes: ITaskChanges): Task[] => {
+
+    const taskExists = tasks.some(task => task.id === id)
+
+    if(!taskExists){
+            throw new Error('Task not found')
+        }
+
+    const update = tasks.map(task => {
+
+        if(task.id === id){
+
+            const updatedTask = {...task, ...changes}
+
+            if(changes.title !== undefined){
+
+                updatedTask.title = changes.title.trim()
+
+                if(updatedTask.title.length === 0){
+                    throw new Error('Title must not be blank')
+                }
+
+                if(updatedTask.title.length > 120){
+                    throw new Error('Title must not exceed 120 characters')
+                 }
+            }
+
+            return updatedTask
+        }
+
+        return task
+
+    })
+
+    return update
+}

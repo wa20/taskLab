@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest"
 import { taskFixtures } from "../src/data/task-fixtures"
-import { getTasksByStatus, groupTasksByStatus, sortTasks, getUnfinishedTasks, addTask } from "../src/domain/task-operations"
+import { getTasksByStatus, groupTasksByStatus, sortTasks, getUnfinishedTasks, addTask, updateTask } from "../src/domain/task-operations"
 import type { Task } from "../src/domain/task"
-import { urlToHttpOptions } from "node:url"
+import { title } from "node:process"
 
 
 describe('getTasksByStatus', () => { 
@@ -288,7 +288,104 @@ describe('addTask', () => {
         expect(result).not.toBe(input)
 
     })
-
-
 })
 
+
+describe('updateTask', () => {
+
+    it('updates the selected task status and preserves its other fields', () => {
+        const result = updateTask(taskFixtures, 'task-101', {status: 'done'})
+
+        const targetTask = result.find(task => task.id === 'task-101')
+
+        const expectedObject ={
+            id:        'task-101',
+            title:     'Research UI patterns',
+            status:    'done',
+            priority:  2,
+            createdAt: '2026-11-01T09:00:00.000Z'
+        }
+
+        expect(targetTask).toEqual(expectedObject)
+
+    })
+
+    it('throws when the task ID does not exist', () => {
+
+        expect(() => updateTask(taskFixtures, 'task-999', {status: 'done'})).toThrow('Task not found')
+    })
+
+
+    it('updates multiple fields without changing other tasks', () => {
+
+        const result = updateTask(taskFixtures, 'task-102', { title: 'Finish unit tests', priority: 2 })
+
+        const expected = taskFixtures.map(task => {
+
+            if(task.id === 'task-102'){
+                return {...task, title: 'Finish unit tests', priority: 2 }
+            }
+
+            return task
+        })
+
+        expect(result).toEqual(expected)
+
+    })
+
+
+    it('leaves task values unchanged when changes are empty', () => {
+
+        const result = updateTask(taskFixtures, 'task-101', {})
+
+        expect(result).toEqual(taskFixtures)
+
+    })
+
+    it('updates a copied task without changing the original input', () => {
+
+        const input = structuredClone(taskFixtures)
+
+        const beforeSnapshot = structuredClone(input)
+
+        const result = updateTask(input, 'task-101', {status: 'done'})
+
+
+        const originalTask = input.find(task => task.id === 'task-101')
+        const updatedTask = result.find(task => task.id === 'task-101')
+
+        expect(input).toEqual(beforeSnapshot)
+        expect(result).not.toBe(input)
+        expect(updatedTask).not.toBe(originalTask)
+
+    })
+
+    it('trims an updated title without changing the supplied changes', () => {
+
+        const changes = { title: ' Finish research ' }
+        
+        const result = updateTask(taskFixtures, 'task-101', changes)
+
+        const targetTask = result.find(task => task.id === 'task-101')
+
+        expect(targetTask?.title).toEqual('Finish research')
+        expect(changes.title).toEqual(' Finish research ')
+    })
+
+
+    it('rejects an updated title that is blank after trimming', () => {
+
+         expect(() => updateTask(taskFixtures, 'task-101', {title: ' '})).toThrow('Title must not be blank')
+
+    })
+
+
+    it('rejects an updated title longer than 120 characters', () => {
+
+         expect(() => updateTask(taskFixtures, 'task-101', { title: 'a'.repeat(121) })).toThrow('Title must not exceed 120 characters')
+    }) 
+
+    
+    
+
+})
