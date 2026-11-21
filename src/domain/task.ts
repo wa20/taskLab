@@ -1,11 +1,11 @@
-export type TaskStatus = 'todo' | 'in-progress' | 'done'
+export type ITaskStatus = 'todo' | 'in-progress' | 'done'
 
-export type TaskPriority = 1 | 2 | 3
+export type ITaskPriority = 1 | 2 | 3
 
-export type Task = {
+export type ITask = {
     id: string,
     title: string,
-    status: TaskStatus
-    priority: TaskPriority
+    status: ITaskStatus
+    priority: ITaskPriority
     createdAt: string
 }

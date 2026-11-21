@@ -10,7 +10,7 @@ import {
     deleteTask, 
     searchTasks
 } from "../src/domain/task-operations"
-import type { Task } from "../src/domain/task"
+import type { ITask } from "../src/domain/task"
 
 
 describe('getTasksByStatus', () => { 
@@ -184,7 +184,7 @@ describe('addTask', () => {
 
     it('appends a new task to the end of the collection', () =>{
 
-        const newTask: Task = {
+        const newTask: ITask = {
             id: "task-106",
             title: "New Test Task",
             status: "todo",
@@ -201,7 +201,7 @@ describe('addTask', () => {
 
     it('rejects a task whose ID already exists', () => {
 
-        const newTask: Task = {
+        const newTask: ITask = {
             id: "task-101",
             title: "New Test Task",
             status: "todo",
@@ -215,7 +215,7 @@ describe('addTask', () => {
 
     it('rejects a title containing only whitespace', () => {
 
-        const newTask: Task = {
+        const newTask: ITask = {
             id: "task-106",
             title: "   ",
             status: "todo",
@@ -229,7 +229,7 @@ describe('addTask', () => {
 
     it('trims the new title without changing the supplied task', () => {
         
-        const newTask: Task = {
+        const newTask: ITask = {
             id: "task-106",
             title: " Read a book ",
             status: "todo",
@@ -247,7 +247,7 @@ describe('addTask', () => {
 
     it('rejects a title longer than 120 characters after trimming', () => {
     
-        const newTask: Task = {
+        const newTask: ITask = {
             id: "task-106",
             title: "a".repeat(121),
             status: "todo",
@@ -262,7 +262,7 @@ describe('addTask', () => {
 
     it('accepts a 120-character title after trimming surrounding spaces', () => {
     
-        const newTask: Task = {
+        const newTask: ITask = {
             id: "task-106",
             title: ' ' + 'a'.repeat(120) + ' ',
             status: "todo",
@@ -282,7 +282,7 @@ describe('addTask', () => {
 
         const beforeSnapshot = structuredClone(input)
 
-        const newTask: Task = {
+        const newTask: ITask = {
             id: "task-106",
             title: ' ' + 'a'.repeat(120) + ' ',
             status: "todo",

@@ -1,10 +1,10 @@
-import type { Task, TaskStatus } from "./task";
+import type { ITask, ITaskStatus } from "./task";
 
-export const getTasksByStatus = (tasks: readonly Task [], status: TaskStatus): Task[] => {
+export const getTasksByStatus = (tasks: readonly ITask[], status: ITaskStatus): ITask[] => {
   return  tasks.filter((task) => task.status === status )
 }
 
-export const sortTasks = (tasks: readonly Task[]): Task[] => {
+export const sortTasks = (tasks: readonly ITask[]): ITask[] => {
 
     const copy = [...tasks]
 
@@ -38,9 +38,9 @@ export const sortTasks = (tasks: readonly Task[]): Task[] => {
     return copy
 }
 
-export type ITasksByStatus = Record<TaskStatus, Task[]>;
+export type ITasksByStatus = Record<ITaskStatus, ITask[]>;
 
-export const groupTasksByStatus = (tasks: readonly Task[]): ITasksByStatus => {
+export const groupTasksByStatus = (tasks: readonly ITask[]): ITasksByStatus => {
 
     const groups: ITasksByStatus = {todo: [], 'in-progress': [], done: []}
 
@@ -52,7 +52,7 @@ export const groupTasksByStatus = (tasks: readonly Task[]): ITasksByStatus => {
     return groups
 }
 
-export const getUnfinishedTasks = (tasks: readonly Task[]): Task[] => {
+export const getUnfinishedTasks = (tasks: readonly ITask[]): ITask[] => {
     
     const unFinishedTodo = getTasksByStatus(tasks, 'todo') 
 
@@ -63,14 +63,14 @@ export const getUnfinishedTasks = (tasks: readonly Task[]): Task[] => {
     return sortTasks(unFinishedTasks)
 }
 
-export const countTasksByStatus = (tasks: readonly Task[], status: TaskStatus): number => {
+export const countTasksByStatus = (tasks: readonly ITask[], status: ITaskStatus): number => {
     
-    const taskStatusCount = getTasksByStatus(tasks, status).length
+    const ITaskStatusCount = getTasksByStatus(tasks, status).length
 
-    return taskStatusCount
+    return ITaskStatusCount
 }
 
-export const addTask = (tasks: readonly Task[], taskToAdd: Task): Task[] => {
+export const addTask = (tasks: readonly ITask[], taskToAdd: ITask): ITask[] => {
 
     const hasDuplicated = tasks.some(task => task.id === taskToAdd.id)
 
@@ -95,9 +95,9 @@ export const addTask = (tasks: readonly Task[], taskToAdd: Task): Task[] => {
     
 }
 
-export type ITaskChanges = Partial<Pick<Task, 'title' | 'status' | 'priority'>>
+export type ITaskChanges = Partial<Pick<ITask, 'title' | 'status' | 'priority'>>
 
-export const updateTask = (tasks: readonly Task[], id: string, changes: ITaskChanges): Task[] => {
+export const updateTask = (tasks: readonly ITask[], id: string, changes: ITaskChanges): ITask[] => {
 
     const taskExists = tasks.some(task => task.id === id)
 
@@ -135,7 +135,7 @@ export const updateTask = (tasks: readonly Task[], id: string, changes: ITaskCha
 }
 
 
-export const deleteTask = (tasks: readonly Task[], id: string): Task[] => {
+export const deleteTask = (tasks: readonly ITask[], id: string): ITask[] => {
 
     const filteredTasks = tasks.filter(task => task.id !== id)
 
@@ -143,7 +143,7 @@ export const deleteTask = (tasks: readonly Task[], id: string): Task[] => {
 }
 
 
-export const searchTasks = (tasks: readonly Task[], query: string): Task[] => {
+export const searchTasks = (tasks: readonly ITask[], query: string): ITask[] => {
 
     const normalizedQuery = query.trim().toLowerCase()
     

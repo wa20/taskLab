@@ -1,6 +1,6 @@
-import { Task } from '../domain/task'
+import { ITask } from '../domain/task'
 
-export  const taskFixtures: Task[] = [
+export  const taskFixtures: ITask[] = [
     {
         id: "task-101",
         title: "Research UI patterns",
