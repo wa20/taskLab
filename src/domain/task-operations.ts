@@ -1,4 +1,4 @@
-import type { ITask, ITaskStatus } from "./task";
+import type { ITask, ITaskStatus, ITaskSummary } from "./task";
 
 export const getTasksByStatus = (tasks: readonly ITask[], status: ITaskStatus): ITask[] => {
   return  tasks.filter((task) => task.status === status )
@@ -158,4 +158,21 @@ export const searchTasks = (tasks: readonly ITask[], query: string): ITask[] => 
     })
 
     return filtered
+}
+
+
+export const getTaskSummary = (tasks: readonly ITask[]): ITaskSummary => {
+
+    const total = tasks.length
+
+    const groups = groupTasksByStatus(tasks)
+
+    const todo = groups.todo.length
+    const done = groups.done.length
+    const inProgress = groups["in-progress"].length
+
+    const completionPercent = total === 0 ? 0 : ( done / total) * 100
+
+
+    return { total, todo, done, inProgress, completionPercent }
 }

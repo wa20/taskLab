@@ -8,9 +8,12 @@ import {
     addTask, 
     updateTask, 
     deleteTask, 
-    searchTasks
+    searchTasks,
+    getTaskSummary
 } from "../src/domain/task-operations"
 import type { ITask } from "../src/domain/task"
+import { brotliDecompress } from "node:zlib"
+import { equal } from "node:assert"
 
 
 describe('getTasksByStatus', () => { 
@@ -494,4 +497,59 @@ describe('searchTasks', () =>{
         expect(result).toEqual([])
     })
 
+})
+
+describe('getTaskSummary', () => {
+
+    it('returns the expected counts and completion percentage for the fixtures', () => {
+
+        const result = getTaskSummary(taskFixtures)
+
+        expect(result).toEqual({
+            total: 5,
+            todo: 2,
+            inProgress: 2,
+            done: 1,
+            completionPercent: 20
+        })
+    })
+
+    it('returns zero counts and zero completion for empty input', () => {
+
+        const result = getTaskSummary([])
+        expect(result).toEqual({
+                    total: 0,
+                    todo: 0,
+                    inProgress: 0,
+                    done: 0,
+                    completionPercent: 0
+                })
+
+        })
+
+    it('returns 100 percent completion when every task is done', () => {
+        
+        const doneTasks = taskFixtures.filter(task => task.status === 'done')
+
+        const result = getTaskSummary(doneTasks)
+
+        expect(result).toEqual({
+            total: 1,
+            todo: 0,
+            inProgress: 0,
+            done: 1,
+            completionPercent: 100
+        })
+    })
+
+    it('calculates the summary without changing the input tasks', () => {
+        
+        const input = structuredClone(taskFixtures)
+
+        const beforeSnapshot = structuredClone(input)
+
+        getTaskSummary(input)
+
+        expect(input).toEqual(beforeSnapshot)
+    })
 })

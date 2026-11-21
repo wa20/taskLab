@@ -9,3 +9,11 @@ export type ITask = {
     priority: ITaskPriority
     createdAt: string
 }
+
+export type ITaskSummary = {
+    total: number
+    todo: number
+    inProgress: number
+    done: number
+    completionPercent: number
+}
