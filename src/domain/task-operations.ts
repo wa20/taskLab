@@ -133,3 +133,11 @@ export const updateTask = (tasks: readonly Task[], id: string, changes: ITaskCha
 
     return update
 }
+
+
+export const deleteTask = (tasks: readonly Task[], id: string): Task[] => {
+
+    const filteredTasks = tasks.filter(task => task.id !== id)
+
+    return filteredTasks
+}

@@ -1,8 +1,15 @@
 import { describe, it, expect } from "vitest"
 import { taskFixtures } from "../src/data/task-fixtures"
-import { getTasksByStatus, groupTasksByStatus, sortTasks, getUnfinishedTasks, addTask, updateTask } from "../src/domain/task-operations"
+import { 
+    getTasksByStatus, 
+    groupTasksByStatus, 
+    sortTasks, 
+    getUnfinishedTasks, 
+    addTask, 
+    updateTask, 
+    deleteTask 
+} from "../src/domain/task-operations"
 import type { Task } from "../src/domain/task"
-import { title } from "node:process"
 
 
 describe('getTasksByStatus', () => { 
@@ -384,8 +391,63 @@ describe('updateTask', () => {
 
          expect(() => updateTask(taskFixtures, 'task-101', { title: 'a'.repeat(121) })).toThrow('Title must not exceed 120 characters')
     }) 
+})
 
-    
-    
 
+describe('deleteTask', () =>{
+
+    it('removes only the task with the requested ID', () =>{
+
+        const expectedArray = ['task-101', 'task-102', 'task-104', 'task-105']
+
+        const result = deleteTask(taskFixtures, 'task-103')
+
+        const taskIds = result.map(task => task.id)
+
+
+        expect(taskIds).toEqual(expectedArray)
+    })
+
+    it('removing the same task twice has the same result', () => {
+
+        const afterFirstDelete = deleteTask(taskFixtures, 'task-103')
+
+        const afterSecondDelete = deleteTask(afterFirstDelete, 'task-103')
+
+        expect(afterSecondDelete).toEqual(afterFirstDelete)
+    })
+
+
+    it('returns an empty array when deleting from empty input', () => {
+        
+        const result = deleteTask([], 'task-103')
+        
+        expect(result).toEqual([])
+    })
+
+
+    it('preserves all tasks when the requested ID does not exist', () => {
+
+        const result = deleteTask(taskFixtures, 'task-999')
+
+        expect(result).toEqual(taskFixtures)
+    })
+
+    it('returns a new array without changing the original tasks', () =>{
+
+        const input = structuredClone(taskFixtures)
+
+        const beforeSnapshot = structuredClone(input)
+
+        const result = deleteTask(input, 'task-103')
+
+        const targetTaskInput = input.find(task => task.id === 'task-101')
+
+
+        const targetTaskResult = result.find(task => task.id === 'task-101')
+
+        expect(input).toEqual(beforeSnapshot)
+        expect(result).not.toBe(input)
+        expect(targetTaskInput).toBe(targetTaskResult)
+    })
 })
