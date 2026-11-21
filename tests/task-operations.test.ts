@@ -7,7 +7,8 @@ import {
     getUnfinishedTasks, 
     addTask, 
     updateTask, 
-    deleteTask 
+    deleteTask, 
+    searchTasks
 } from "../src/domain/task-operations"
 import type { Task } from "../src/domain/task"
 
@@ -450,4 +451,47 @@ describe('deleteTask', () =>{
         expect(result).not.toBe(input)
         expect(targetTaskInput).toBe(targetTaskResult)
     })
+})
+
+describe('searchTasks', () =>{
+
+    it('matches title substrings regardless of case and surrounding query spaces', () => {
+
+        const result = searchTasks(taskFixtures, '  TEST  ')
+
+        const taskIds = result.map(task => task.id)
+
+        expect(taskIds).toEqual(['task-102'])
+    })
+
+    it('returns all tasks in a new array for a whitespace-only query', () => {
+
+        const result = searchTasks(taskFixtures, ' ')
+
+        expect(result).toEqual(taskFixtures)
+        expect(result).not.toBe(taskFixtures)
+    } )
+
+    it('preserves matching task order without changing the input', () => {
+
+        const input = structuredClone(taskFixtures)
+
+        const beforeSnapshot = structuredClone(input)
+
+        const result = searchTasks(input, 't')
+
+        const targetTask = result.map(task => task.id)
+
+
+        expect(targetTask).toEqual(['task-101', 'task-102', 'task-103', 'task-104', 'task-105'])
+        expect(input).toEqual(beforeSnapshot)
+    })
+
+    it('returns an empty array when no titles match', () => {
+
+        const result = searchTasks(taskFixtures, 'zebra')
+
+        expect(result).toEqual([])
+    })
+
 })

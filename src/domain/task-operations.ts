@@ -141,3 +141,21 @@ export const deleteTask = (tasks: readonly Task[], id: string): Task[] => {
 
     return filteredTasks
 }
+
+
+export const searchTasks = (tasks: readonly Task[], query: string): Task[] => {
+
+    const normalizedQuery = query.trim().toLowerCase()
+    
+    if(normalizedQuery.length === 0){
+
+        return [...tasks]
+    }
+
+    const filtered = tasks.filter(task => {
+
+        return task.title.toLowerCase().includes(normalizedQuery)
+    })
+
+    return filtered
+}
