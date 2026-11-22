@@ -553,3 +553,126 @@ describe('getTaskSummary', () => {
         expect(input).toEqual(beforeSnapshot)
     })
 })
+
+type IDateFilterOptions = {
+    includeDone?: boolean,
+}
+
+const getTasksCreatedBefore = (tasks: readonly ITask[], cutoff: string, options?:IDateFilterOptions): ITask[] => {
+    
+
+    const matchingTasks = tasks.filter((task )=> {
+
+        if (task.createdAt >= cutoff){
+
+            return false
+        }
+
+        if (task.status === 'done' && options?.includeDone !== true){
+
+            return false
+        }
+
+        return true
+            
+            
+        })
+
+        return matchingTasks
+}
+
+describe('getTasksCreatedBefore', () => {
+
+    it('includes an unfinished task created strictly before the cutoff', () =>{
+        
+        const input = taskFixtures.filter(task => task.id === 'task-101')
+
+        const cutoff = '2026-11-02T09:00:00.000Z'
+
+        const result = getTasksCreatedBefore(input, cutoff)
+
+        expect(result).toEqual(input)
+    })
+
+
+    it('excludes a task created exactly at the cutoff', () => {
+        
+        const input = taskFixtures.filter(task => task.id === 'task-101')
+
+        const cutoff = '2026-11-01T09:00:00.000Z'
+
+        const result = getTasksCreatedBefore(input, cutoff)
+
+        expect(result).toEqual([])
+    }) 
+
+
+    it('excludes a task created after the cutoff', () => {
+        
+        const input = taskFixtures.filter(task => task.id === 'task-102')
+
+        const cutoff = '2026-11-01T09:00:00.000Z'
+
+        const result = getTasksCreatedBefore(input, cutoff)
+
+        expect(result).toEqual([])
+    })
+
+
+    it('excludes completed tasks by default even when created before the cutoff', () => {
+        
+        const input = taskFixtures.filter(task => task.id === 'task-103')
+
+        const cutoff = '2026-11-04T09:00:00.000Z'
+
+        const result = getTasksCreatedBefore(input, cutoff)
+
+        expect(result).toEqual([])
+    })
+
+    it('includes completed tasks before the cutoff when includeDone is true', () => {
+        const input = taskFixtures.filter(task => task.id === 'task-103')
+
+        const cutoff = '2026-11-04T09:00:00.000Z'
+
+        const result = getTasksCreatedBefore(input, cutoff, {includeDone: true})
+
+        expect(result).toEqual(input)
+    })
+
+    it('returns an empty array when no tasks are supplied', () => {
+
+        const cutoff = '2026-11-04T09:00:00.000Z'
+
+        const result = getTasksCreatedBefore([], cutoff)
+
+        expect(result).toEqual([])
+    })
+
+    it('excludes tasks at the cutoff even when includeDone is true', () => {
+
+         const input = taskFixtures.filter(task => task.id === 'task-103')
+
+         const cutoff = '2026-11-03T09:00:00.000Z'
+
+         const result = getTasksCreatedBefore(input, cutoff, {includeDone: true})
+
+          expect(result).toEqual([])
+
+    })
+
+    it('returns a new array without changing the input tasks', () => {
+
+        const input = structuredClone(taskFixtures)
+
+        const beforeSnapshot = structuredClone(input)
+
+        const cutoff = '2026-11-04T09:00:00.000Z'
+
+        const result = getTasksCreatedBefore(input, cutoff, {includeDone: true})
+
+        expect(input).toEqual(beforeSnapshot)
+        expect(result).not.toBe(input)
+    })
+
+})
