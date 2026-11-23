@@ -1,4 +1,6 @@
 import type { ITask, ITaskStatus, ITaskSummary } from "./task";
+import { validateTaskTitle } from "./validate-task-title";
+
 
 export const getTasksByStatus = (tasks: readonly ITask[], status: ITaskStatus): ITask[] => {
   return  tasks.filter((task) => task.status === status )
@@ -65,9 +67,9 @@ export const getUnfinishedTasks = (tasks: readonly ITask[]): ITask[] => {
 
 export const countTasksByStatus = (tasks: readonly ITask[], status: ITaskStatus): number => {
     
-    const ITaskStatusCount = getTasksByStatus(tasks, status).length
+    const matchingTaskCount = getTasksByStatus(tasks, status).length
 
-    return ITaskStatusCount
+    return matchingTaskCount
 }
 
 export const addTask = (tasks: readonly ITask[], taskToAdd: ITask): ITask[] => {
@@ -79,16 +81,7 @@ export const addTask = (tasks: readonly ITask[], taskToAdd: ITask): ITask[] => {
         throw new Error('Duplicate task ID')
     }
 
-    const checkTitle = taskToAdd.title.trim()
-
-    if(checkTitle.length === 0){
-
-        throw new Error('Title must not be blank')
-    }
-
-    if(checkTitle.length > 120){
-        throw new Error('Title must not exceed 120 characters')
-    }
+    const checkTitle = validateTaskTitle(taskToAdd.title)
 
 
       return [...tasks, { ...taskToAdd, title: checkTitle }]
@@ -113,15 +106,7 @@ export const updateTask = (tasks: readonly ITask[], id: string, changes: ITaskCh
 
             if(changes.title !== undefined){
 
-                updatedTask.title = changes.title.trim()
-
-                if(updatedTask.title.length === 0){
-                    throw new Error('Title must not be blank')
-                }
-
-                if(updatedTask.title.length > 120){
-                    throw new Error('Title must not exceed 120 characters')
-                 }
+                updatedTask.title = validateTaskTitle(changes.title)
             }
 
             return updatedTask

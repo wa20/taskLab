@@ -1,4 +1,5 @@
 import type { ITask } from "./task";
+import { validateTaskTitle } from "./validate-task-title";
 
 export const parseTask = (value: unknown): ITask => {
 
@@ -18,15 +19,7 @@ export const parseTask = (value: unknown): ITask => {
         throw new Error('Task title must be a string')
     }
 
-    const title = value.title.trim()
-
-    if(title.length === 0){
-        throw new Error('Title must not be blank')
-    }
-
-    if(title.length > 120) {
-        throw new Error('Title must not exceed 120 characters')
-    }
+    const title = validateTaskTitle(value.title)
 
 
     if(!('status' in value) || typeof value.status !== 'string'){
