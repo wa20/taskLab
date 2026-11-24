@@ -1,4 +1,4 @@
-import { ITask } from '../domain/task'
+import type { ITask } from '../domain/task.js'
 
 export  const taskFixtures: ITask[] = [
     {

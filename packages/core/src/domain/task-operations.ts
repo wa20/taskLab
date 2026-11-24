@@ -1,5 +1,5 @@
-import type { ITask, ITaskStatus, ITaskSummary } from "./task";
-import { validateTaskTitle } from "./validate-task-title";
+import type { ITask, ITaskStatus, ITaskSummary } from "./task.js";
+import { validateTaskTitle } from "./validate-task-title.js";
 
 
 export const getTasksByStatus = (tasks: readonly ITask[], status: ITaskStatus): ITask[] => {

@@ -22,6 +22,20 @@ Run these commands from the repository root:
 
 For a new checkout, run `npm ci` first, then run the tests and typecheck. Use `npm run test -w @tasklab/core` while working; press Ctrl+C to stop watch mode.
 
+## Building core
+
+From the repository root, run:
+
+```bash
+npm run build:core
+```
+
+This compiles the core package into `packages/core/dist/`. The generated `.js` files contain executable JavaScript, while the `.d.ts` files describe the public types for TypeScript consumers.
+
+Build core before another package imports `@tasklab/core`. After changing core source, run the build again so consumers use the updated output.
+
+The `dist/` directory is Git-ignored because its contents are generated from the committed source and build configuration. Make changes in `packages/core/src/`, rather than editing generated files.
+
 ## Current behaviour
 
 Each task has an ID, title, status, priority, and creation timestamp. Status is `todo`, `in-progress`, or `done`. Priority is `1` for High, `2` for Medium, and `3` for Low.

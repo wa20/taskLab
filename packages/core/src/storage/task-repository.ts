@@ -1,4 +1,4 @@
-import type { ITask } from "../domain/task";
+import type { ITask } from "../domain/task.js";
 
 export type ITaskRepository = {
     loadTasks: () => Promise<ITask[]>,

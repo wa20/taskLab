@@ -1,5 +1,5 @@
-import type { ITask } from "./task";
-import { validateTaskTitle } from "./validate-task-title";
+import type { ITask } from "./task.js";
+import { validateTaskTitle } from "./validate-task-title.js";
 
 export const parseTask = (value: unknown): ITask => {
 
