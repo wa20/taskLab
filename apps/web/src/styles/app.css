@@ -1,0 +1,106 @@
+.app-header,
+.app-main {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding: 24px;
+}
+
+.app-header h1,
+.app-header p {
+  margin: 0;
+}
+
+.app-header p { 
+    margin-top: 8px; 
+}
+
+.app-header button{
+    min-height: 44px;
+    padding: 10px 20px;
+    border: 0;
+    border-radius: 8px;
+    background-color: #2859e7;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.app-header button:focus-visible,
+.form-field input:focus-visible,
+.form-field select:focus-visible {
+  outline: 3px solid #2859e7;
+  outline-offset: 3px;
+}
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.app-main {
+  display: grid;
+  gap: 24px;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+}
+
+.summary-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: white;
+    border: 1px solid #e0e5ef;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.summary-label {
+  font-size: 0.875rem;
+  color: #657187;
+}
+
+.summary-value {
+  font-size: 2rem;
+  line-height: 1.2;
+}
+
+.toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.form-field input,
+.form-field select {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 1px solid #e0e5ef;
+    border-radius: 8px;
+    background-color: white;
+    color: inherit;
+}
+
+@media (min-width: 700px) {
+  .summary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  .toolbar {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    }
+}
