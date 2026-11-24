@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { getTaskSummary } from '@tasklab/core'
 import { demoTasks } from './data/demo-tasks'
 
@@ -6,12 +5,11 @@ import './App.css'
 
 function App() {
 
-  const summmary = getTaskSummary(demoTasks)
+  const summary = getTaskSummary(demoTasks)
 
   return (
     <>
       <section id="center">
-        
         <div>
           <h1>Get started</h1>
           <p>
@@ -19,7 +17,7 @@ function App() {
           </p>
         </div>
         <div className="counter" >
-          Total Tasks:  {summmary.total}
+          Total Tasks:  {summary.total}
         </div>
       </section>
     </>
