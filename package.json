@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "private": true,
+  "workspaces": ["packages/*", "apps/*"],
   "scripts": {
-    "test": "vitest",
-    "test:run": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "test:core": "npm run test:run -w @tasklab/core",
+    "typecheck:core": "npm run typecheck -w @tasklab/core",
+    "build:core": "npm run build -w @tasklab/core",
+    "test": "npm run test:core"
   },
   "repository": {
     "type": "git",
