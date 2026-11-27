@@ -96,6 +96,53 @@
     color: inherit;
 }
 
+.task-board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.task-column {
+  min-width: 0;
+  padding: 16px;
+  background-color: #edf2f8;
+  border-radius: 14px;
+}
+
+.task-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.task-card {
+  padding: 16px;
+  background-color: white;
+  border: 1px solid #e0e5ef;
+  border-radius: 12px;
+  overflow-wrap: anywhere;
+}
+
+.task-card h3 {
+  margin: 0 0 12px;
+}
+
+.task-card p {
+  margin: 8px 0 0;
+}
+
+  /* ------------------------------------------------------------------------------- */
+
+
+ @media (min-width: 1100px) {
+  .task-board {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  }
+
 @media (min-width: 700px) {
   .summary-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));

@@ -2,6 +2,7 @@ import { getTaskSummary } from '@tasklab/core'
 import { demoTasks } from './data/demo-tasks'
 import SummaryCards from './components/SummaryCards'
 import Toolbar from './components/Toolbar'
+import TaskBoard from './components/TaskBoard'
 import './styles/app.css'
 
 
@@ -30,7 +31,7 @@ function App() {
             <Toolbar />
           </section>
           <section aria-label="Task board">
-            <h2>Task Board</h2>
+            <TaskBoard tasks={demoTasks}/>
           </section>
         </main>
     </>
